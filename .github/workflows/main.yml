@@ -1,0 +1,25 @@
+name: update-dependencies
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+
+      - name: Install npins
+        run: nix profile install 'nixpkgs#npins'
+
+      - name: Update npins sources
+        id: update
+        uses: getchoo/update-npins@v0.1.2
+        with:
+          npins-directory: npins
